@@ -1,0 +1,10 @@
+BackEnd/env/
+BackEnd/todo.md
+BackEnd/src/database/datos.py
+BackEnd/src/database/db.sql
+
+__pycache__/
+
+*.ini
+
+x.py

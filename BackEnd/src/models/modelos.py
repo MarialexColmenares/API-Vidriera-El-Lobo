@@ -7,7 +7,6 @@ class Roles_Permisos(SQLModel, table=True):
     
     rol_id: int = Field(foreign_key="roles.id", primary_key=True)
     permiso_id: int = Field(foreign_key="permisos.id", primary_key=True)
-
 class Permisos(SQLModel, table=True):
     __tablename__: str = "permisos"
     
@@ -16,7 +15,6 @@ class Permisos(SQLModel, table=True):
     descripcion: str
 
     roles: List["Rol"] = Relationship(back_populates="permisos", link_model=Roles_Permisos)
-
 class Rol(SQLModel, table=True):
     __tablename__: str = "roles"
 
@@ -26,7 +24,6 @@ class Rol(SQLModel, table=True):
     
     usuarios: List["Usuarios"] = Relationship(back_populates="rol")
     permisos: List[Permisos] = Relationship(back_populates="roles", link_model=Roles_Permisos)
-
 class material(SQLModel, table=True):
     __tablename__: str = "material"
     
@@ -36,7 +33,6 @@ class material(SQLModel, table=True):
     color: str
     stock_disponible: float
     precio_m2: float
-
 class PreguntasSeguridad(SQLModel, table=True):
     __tablename__: str = "Preguntas_seguridad"
     
@@ -45,7 +41,6 @@ class PreguntasSeguridad(SQLModel, table=True):
     respuesta: str
     
     usuario: Optional["Usuarios"] = Relationship(back_populates="preguntas_seguridad")
-
 class Usuarios(SQLModel, table=True):
     __tablename__: str = "usuarios"
     
@@ -60,19 +55,19 @@ class Usuarios(SQLModel, table=True):
     
     rol: Optional[Rol] = Relationship(back_populates="usuarios")
     preguntas_seguridad: List[PreguntasSeguridad] = Relationship(back_populates="usuario")
-
-class ordenes_trabajo(SQLModel, table=True):
+class OrdenesTrabajo(SQLModel, table=True):
     __tablename__: str = "orden"
     
     id: Optional[int] = Field(default=None, primary_key=True)
     codigo_orden: str = Field(unique=True, index=True)
     cliente_id: Optional[int] = Field(foreign_key="usuarios.id")
     fecha_entrega_estimado: date 
-    estado: Optional[str] = Field(default="Pendiente") 
+    estado: Optional[str] = Field(default="Pendiente") # Estado físico: Pendiente, Corte, Listo, Entregado
     monto_total: Optional[float] = Field(default=None)
+    estado_pago: str = Field(default="Pendiente") # Pendiente, Abonado, Pagado
 
-
-class orden_detalle(SQLModel, table=True):
+    cliente: Optional[Usuarios] = Relationship(back_populates="usuarios")
+class OrdenDetalle(SQLModel, table=True):
     __tablename__: str = "detalles_de_orden"
     
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -82,7 +77,17 @@ class orden_detalle(SQLModel, table=True):
     ancho_m: float
     alto_m: float
     cantidad: int
+class Abonos(SQLModel, table=True):
+    __tablename__: str = "abonos"
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
+    monto: float = Field(default=0.0)
+    fecha_pago: datetime = Field(default_factory=datetime.utcnow)
+    metodo_pago: str  # Ej: "Efectivo", "Transferencia", "Punto de Venta"
+    observaciones: Optional[str] = Field(default=None)
+    orden_id: int = Field(foreign_key="orden.id")
 
+    orden: Optional["OrdenesTrabajo"] = Relationship(back_populates="abonos")
 class trazabilidad(SQLModel, table=True):
     __tablename__: str = "trazabilidad"
     

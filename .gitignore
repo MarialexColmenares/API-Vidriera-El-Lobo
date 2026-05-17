@@ -1,3 +1,5 @@
+Frontend/
+
 BackEnd/env/
 BackEnd/todo.md
 BackEnd/src/database/datos.py
@@ -8,3 +10,5 @@ __pycache__/
 *.ini
 
 x.py
+
+

@@ -1,0 +1,12 @@
+[
+  {
+    "descripcion": "usuario para el dueño con permisos globales",
+    "nombre_rol": "SuperUsusario",
+    "id": 1
+  },
+  {
+    "descripcion": "usuario para hacer ordenes, consultar los estados de lasordenes, pagarlas, no toca el sistema interno de la empreza",
+    "nombre_rol": "cliente",
+    "id": 2
+  }
+]

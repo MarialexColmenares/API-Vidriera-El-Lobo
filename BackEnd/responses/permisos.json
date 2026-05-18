@@ -1,0 +1,19 @@
+{
+  "permisos": [
+    {
+      "nombre": "consulta estadisticas",
+      "descripcion": "permite a los usuarios consultar en dashboard con las estadisticas ",
+      "id": 1
+    },
+    {
+      "nombre": "consultar ordenes ",
+      "descripcion": " permite consultar las ordenes de todos los clientes con sus estados y montos",
+      "id": 2
+    },
+    {
+      "nombre": "cancelar ordenes ",
+      "descripcion": "permite a los admin cancelar orenes de clientes",
+      "id": 3
+    }
+  ]
+}

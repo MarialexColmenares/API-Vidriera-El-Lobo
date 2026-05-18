@@ -52,3 +52,6 @@ def registrar_preguntas_seguridad(
         session.refresh(resp)
 
     return respuestas_guardadas
+
+
+# cometario para prueba de push de un colaborador

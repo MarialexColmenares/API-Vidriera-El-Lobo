@@ -2,10 +2,14 @@ from pydantic import BaseModel, Field
 
 class PreguntasSegurdadCreate(BaseModel):
     pregunta: str
-    
-    
     class Config:
-        from_atributes = True
+        from_attributes = True  
+        
+        json_schema_extra = {
+            "example": {
+                "pregunta": "¿Cuál fue el nombre de tu primera mascota?"
+            }
+        }
         
 class RolCreate(BaseModel):
     nombre_rol: str
@@ -21,7 +25,6 @@ class RolCreate(BaseModel):
 class PermisoCreate(BaseModel):
     nombre: str
     descripcion: str
-    
     class Config:
         json_schema_extra = {
             "example": {
@@ -29,7 +32,6 @@ class PermisoCreate(BaseModel):
                 "descripcion": "Permiso para crear ordenes de trabajo"
             }
         }
-    
 
 class usuarioCreate(BaseModel):
     nombre: str
@@ -38,7 +40,6 @@ class usuarioCreate(BaseModel):
     password: str
     documento: str 
     rol_id: int
-    
     class Config:
         json_schema_extra = {
             "example": {

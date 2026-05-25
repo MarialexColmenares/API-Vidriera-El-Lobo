@@ -14,7 +14,7 @@ def inicio():
 @app.on_event("startup")
 def on_startup():
     create_tables()
-    print("¡Tablas creadas con éxito! 🐺")
+    print("¡Tablas creadas con éxito! 🐺") vvvvvv
 
 app.include_router(permisos_router)
 app.include_router(roles_router)

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from database.conexion import get_db
 from schemas.esquemas import UsuarioRespuestaSeguridadResponse, usuarioCreate, UsuarioRespuestaSeguridadCreate
-from models.modelos import Rol, Usuarios
+from models.modelos import Rol, Usuarios, UsuarioRespuestasSeguridad
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -39,7 +39,8 @@ def registrar_preguntas_seguridad(
     respuestas_guardadas = []
 
     for item in data_respuestas:
-        nueva_relacion = UsuarioRespuestaSeguridadCreate(
+        # aqui tengo que recordar que se crea una instancia del modelo orm que es un objeto, y esa instancia es la que se agrega a la sesión, no el esquema de pydantic que fue un error que se repitio 
+        nueva_relacion = UsuarioRespuestasSeguridad(
             usuario_id=usuario_id,
             pregunta_id=item.pregunta_id,
             respuesta=item.respuesta  
@@ -52,3 +53,16 @@ def registrar_preguntas_seguridad(
         session.refresh(resp)
 
     return respuestas_guardadas
+
+
+# filtrar usuarios por documento
+@router.get("/documento/{documento}")
+def obtener_usuario_por_documento(
+    documento: str,
+    session: Session = Depends(get_db)
+):
+    usuario = session.query(Usuarios).filter(Usuarios.documento == documento).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="No se encontró un usuario con el documento proporcionado.")
+    
+    return usuario

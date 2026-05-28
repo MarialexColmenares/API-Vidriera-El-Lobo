@@ -3,6 +3,7 @@ from sqlmodel import Session
 from database.conexion import get_db
 from schemas.esquemas import PermisoCreate
 from models.modelos import Permisos
+from services.permisos_services import permisos
 
 router = APIRouter(prefix="/permisos", tags=["Permisos"])
 
@@ -10,10 +11,7 @@ router = APIRouter(prefix="/permisos", tags=["Permisos"])
 def obtener_permisos(
     session: Session = Depends(get_db)
 ):
-    permisos = session.query(Permisos).all()
-    if not permisos: 
-        raise HTTPException(status_code=404, detail="No se encontraron permisos")
-    return {"permisos": permisos}
+    return permisos(session)
 
 @router.post("/")
 def crear_permiso(

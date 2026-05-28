@@ -99,7 +99,7 @@ class Abonos(SQLModel, table=True):
 class trazabilidad(SQLModel, table=True):
     __tablename__: str = "trazabilidad"
     id: Optional[int] = Field(default=None, primary_key=True)
-    orden_id: int = Field(foreign_key="orden.id")  
+    orden_id: int = Field(foreign_key="orden.id")
     etapa: str
     operador_id: Optional[int] = Field(foreign_key="usuarios.id")
     autorizado_por: Optional[int] = Field(foreign_key="usuarios.id")

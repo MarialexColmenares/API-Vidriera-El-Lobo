@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from database.conexion import get_db
 from schemas.esquemas import UsuarioRespuestaSeguridadResponse, usuarioCreate, UsuarioRespuestaSeguridadCreate
-from models.modelos import Rol, Usuarios, UsuarioRespuestasSeguridad
+from models.modelos import  Usuarios, UsuarioRespuestasSeguridad
+from services.usuarios_services import *
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -10,25 +11,15 @@ router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 def obtener_usuarios(
     session: Session = Depends(get_db)
 ):
-    usuarios = session.query(Usuarios).all()
-    if not usuarios:
-        raise HTTPException (status_code=404,detail="No se encontraron usuarios")
-    
-    return usuarios
+    return obtener_usuarios_service(session)
 
 @router.post("/")
 def crear_usuario(
     data: usuarioCreate,
     session: Session = Depends(get_db)
 ):
-    nuevo_usuario = Usuarios(
-        **data.model_dump()
-    )
-    session.add(nuevo_usuario)
-    session.commit()
-    session.refresh(nuevo_usuario)
-    
-    return {"message": "Usuario creado exitosamente", "usuario": nuevo_usuario}
+    return crear_usuario_service(data=data, session=session)
+
 
 @router.post("/{usuario_id}/preguntas-seguridad", response_model=list[UsuarioRespuestaSeguridadResponse])
 def registrar_preguntas_seguridad(
@@ -36,26 +27,12 @@ def registrar_preguntas_seguridad(
     data_respuestas: list[UsuarioRespuestaSeguridadCreate], 
     session: Session = Depends(get_db)
 ):
-    respuestas_guardadas = []
-
-    for item in data_respuestas:
-        # aqui tengo que recordar que se crea una instancia del modelo orm que es un objeto, y esa instancia es la que se agrega a la sesión, no el esquema de pydantic que fue un error que se repitio 
-        nueva_relacion = UsuarioRespuestasSeguridad(
-            usuario_id=usuario_id,
-            pregunta_id=item.pregunta_id,
-            respuesta=item.respuesta  
-        )
-        session.add(nueva_relacion)
-        respuestas_guardadas.append(nueva_relacion)
-
-    session.commit()
-    for resp in respuestas_guardadas:
-        session.refresh(resp)
-
-    return respuestas_guardadas
+    return registrar_preguntas_seguridad_service(usuario_id=usuario_id, data_respuestas=data_respuestas, session=session)
 
 
 # filtrar usuarios por documento
+
+# este se podria cambiar por un filtro por todos los campos 
 @router.get("/documento/{documento}")
 def obtener_usuario_por_documento(
     documento: str,

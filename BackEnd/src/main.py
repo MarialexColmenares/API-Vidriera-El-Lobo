@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from database.conexion import create_tables
 from routers import router_central
 
-
 app = FastAPI()
 
 @app.get("/")

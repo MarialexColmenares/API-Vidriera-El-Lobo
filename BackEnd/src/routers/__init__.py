@@ -1,3 +1,5 @@
+# Este archivo se encarga de centralizar la importación de todos los routers y luego exportarlos como un solo router para ser incluido en el main.py
+
 from fastapi import APIRouter
 from routers.material_router import router as material_router
 from routers.permisos_router import router as permisos_router
@@ -10,6 +12,6 @@ router_central = APIRouter()
 # Incluimos cada sub-router en nuestro router central
 router_central.include_router(usuarios_router)
 router_central.include_router(permisos_router)
-router_central.include_router(material_router)
 router_central.include_router(preguntas_seguridad_router)
 router_central.include_router(roles_router)
+router_central.include_router(material_router)

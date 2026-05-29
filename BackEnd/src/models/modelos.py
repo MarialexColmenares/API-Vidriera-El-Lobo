@@ -56,7 +56,7 @@ class Usuarios(SQLModel, table=True):
     respuestas_seguridad: List[UsuarioRespuestasSeguridad] = Relationship(back_populates="usuario")
     ordenes: List["OrdenesTrabajo"] = Relationship(back_populates="cliente")
 
-class material(SQLModel, table=True):
+class Material(SQLModel, table=True):
     __tablename__: str = "material"
     id: Optional[int] = Field(default=None, primary_key=True)
     nombre: str = Field(unique=True, index=True)

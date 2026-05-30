@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from sqlmodel import Session, select
 from models.modelos import Rol
 

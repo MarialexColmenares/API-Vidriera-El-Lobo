@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session
 from database.conexion import get_db
-from schemas.esquemas import UsuarioRespuestaSeguridadResponse, usuarioCreate, UsuarioRespuestaSeguridadCreate
-from models.modelos import  Usuarios, UsuarioRespuestasSeguridad
+from schemas.esquemas import *
 from services.usuarios_services import *
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
@@ -29,17 +29,26 @@ def registrar_preguntas_seguridad(
 ):
     return registrar_preguntas_seguridad_service(usuario_id=usuario_id, data_respuestas=data_respuestas, session=session)
 
-
-# filtrar usuarios por documento
-
-# este se podria cambiar por un filtro por todos los campos 
-@router.get("/documento/{documento}")
-def obtener_usuario_por_documento(
-    documento: str,
-    session: Session = Depends(get_db)
+# antes filtraba solo por documento, ahora se puede filtrar por documento, nombre, correo o rol_id. Todos los filtros son opcionales y combinables entre sí.
+@router.get("/filter/", response_model=list[UsuarioResponse])
+def get_usuarios_filter(
+    session: Session = Depends(get_db),
+    # aqui el Query recalca que es un query parameter y permite agregarle una descripción que se verá en la documentación de FastAPI
+    nombre: Optional[str] = Query(None, description="Filtrar por nombre"),
+    documento: Optional[str] = Query(None, description="Filtrar por documento"),
+    correo: Optional[str] = Query(None, description="Filtrar por correo"),
+    rol_id: Optional[int] = Query(None, description="Filtrar por rol_id") # luego se podria colocar para que filtre por el nombre del rol en vez del id, pero eso implicaría hacer un join con la tabla de roles, lo cual es un poco más complejo. Por ahora lo dejo así para que sea más sencillo de implementar
 ):
-    usuario = session.query(Usuarios).filter(Usuarios.documento == documento).first()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="No se encontró un usuario con el documento proporcionado.")
+
+    # Endpoint para listar usuarios. Todos los filtros son opcionales.
+    # Si no se envía ninguno, devolverá la lista completa.
     
-    return usuario
+    # Pasamos los parámetros sueltos directamente al servicio
+    usuarios = get_usuarios_filtrados_service(
+        session=session,
+        nombre=nombre,
+        documento=documento,
+        correo=correo,
+        rol_id=rol_id
+    )
+    return usuarios

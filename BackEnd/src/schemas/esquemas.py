@@ -52,6 +52,18 @@ class usuarioCreate(BaseModel):
             }
         }
         
+# nuevo esquema para leer usuarios 
+class UsuarioResponse(BaseModel):
+    id: int
+    nombre: str
+    apellido: str
+    correo: str
+    documento: str
+    rol_id: int
+
+    class Config:
+        from_attributes = True  # En Pydantic v2 (antiguo orm_mode = True) para leer objetos de SQLModel/SQLAlchemy
+        
 class UsuarioRespuestaSeguridadCreate(BaseModel):
     pregunta_id: int = Field(..., description="El ID de la pregunta predefinida en el catálogo")
     respuesta: str = Field(..., min_length=2, max_length=255, description="La respuesta escrita por el usuario")

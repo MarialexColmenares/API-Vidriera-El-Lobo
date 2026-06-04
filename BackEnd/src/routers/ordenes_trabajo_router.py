@@ -6,7 +6,7 @@ from schemas.esquemas import OrdenTrabajoCreate
 
 router = APIRouter(prefix="/ordenes_trabajo", tags=["Ordenes de Trabajo"])
 
-@router.get("/")
+@router.get("/") # faltan esquemas de respuesta 
 def obtener_ordenes_trabajo(
     session: Session = Depends(get_db)
 ):

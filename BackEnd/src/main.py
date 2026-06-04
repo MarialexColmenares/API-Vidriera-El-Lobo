@@ -19,8 +19,6 @@ app = FastAPI(
     description="API para la gestión de ordenes de trabajo, clientes, productos y stock en Vidrieria el Lobo 🐺",
     lifespan=lifespan # <--- IMPORTANTE: Vinculamos el ciclo de vida
 )
-
-
 @app.get("/")
 def inicio():
     return {"message":"Bienvenidos a la api de Vidrieria el Lobo 🐺"}

@@ -5,6 +5,7 @@ from sqlmodel import select
 
 # aun no se prueban las funciones
 
+
 def obtener_ordenes_trabajo_service(session: Session):
     ordenes = session.exec(select(OrdenTrabajo)).all()
     
@@ -15,7 +16,7 @@ def obtener_ordenes_trabajo_service(session: Session):
 
 def crear_ordenes_trabajo_service(data, session: Session):
     nueva_orden = OrdenTrabajo(
-        **data.model_dump()    
+        **data.model_dump()     
     )
     
     session.add(nueva_orden)
@@ -25,3 +26,18 @@ def crear_ordenes_trabajo_service(data, session: Session):
     return nueva_orden
 
 # faltya asociar ordenes con abonos 
+
+#estado de orden
+def estado_orden_service(id_orden, nuevo_estado, session):
+    orden = session.get(OrdenTrabajo, id_orden)
+    
+    if not orden:
+        raise HTTPException(status_code=404, detail="Orden no encontrada")
+    
+    orden.estado = nuevo_estado
+    
+    session.add(orden)
+    session.commit()
+    session.refresh(orden)
+    
+    return orden

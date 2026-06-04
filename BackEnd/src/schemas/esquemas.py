@@ -83,3 +83,21 @@ class UsuarioRespuestaSeguridadResponse(BaseModel):
 
     class Config:
         from_attributes = True  # En Pydantic v2 (antiguo orm_mode = True) para leer objetos de SQLModel/SQLAlchemy
+        
+class OrdenTrabajoCreate(BaseModel):
+    descripcion: str
+    fecha_inicio: str
+    fecha_fin: str
+    estado: str
+    usuario_id: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "descripcion": "Reparación de aire acondicionado",
+                "fecha_inicio": "2024-07-01T10:00:00",
+                "fecha_fin": "2024-07-01T12:00:00",
+                "estado": "pendiente",
+                "usuario_id": 1
+            }
+        }

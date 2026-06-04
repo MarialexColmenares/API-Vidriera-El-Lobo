@@ -85,7 +85,7 @@ class OrdenDetalle(SQLModel, table=True):
     ancho_m: float
     alto_m: float
     cantidad: int
-
+# tengo dudas en como manejar el abono si se usa un codigo de orden asosciado a ua orden que a us vez este asociada con un cliente o simplemente el id de la orden para hacer un abono a ella 
 class Abono(SQLModel, table=True):
     __tablename__: str = "abonos"
     id: Optional[int] = Field(default=None, primary_key=True)

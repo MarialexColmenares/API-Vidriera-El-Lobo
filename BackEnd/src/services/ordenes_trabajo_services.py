@@ -1,8 +1,8 @@
 from fastapi import HTTPException
-from sqlmodel import Session, select, desc
+from sqlmodel import Session, select
 from datetime import datetime
 import random
-from models.modelos import OrdenTrabajo, OrdenDetalle
+from models.modelos import OrdenTrabajo, OrdenDetalle, Material
 from schemas.esquemas import OrdenTrabajoCreate
 
 def obtener_ordenes_trabajo_service(session: Session):
@@ -13,10 +13,10 @@ def obtener_ordenes_trabajo_service(session: Session):
     
     return ordenes
 
-#  por ahora funciona y hace un dcodigode orden autogenerado pero me gustariaque el numero-aleatorio sino sumativo para que se lleve como un orden en los codigos de orden 
+#  por ahora funciona y hace un codigo de orden autogenerado pero me gustariaque el numero-aleatorio sino sumativo para que se lleve como un orden en los codigos de orden 
 
 def crear_orden_con_detalles(data: OrdenTrabajoCreate, session: Session):
-    # Lógica automatizada: Generar código único para la orden (Ej: ORD-26-XXXX)
+    # generar código único para la orden (Ej: ORD-26-XXXX) 
     año_actual = datetime.now().strftime("%y")
     numero_aleatorio = random.randint(1000, 9999)
     codigo_autogenerado = f"ORD-{año_actual}-{numero_aleatorio}"
@@ -39,9 +39,8 @@ def crear_orden_con_detalles(data: OrdenTrabajoCreate, session: Session):
     # 2. Recorremos la lista de vidrios del esquema e insertamos en detalles_de_orden
     for item in data.detalles:
         
-        # --- AQUÍ VA TU LÓGICA DE NEGOCIO ---
-        # Simulación: Buscas el precio del material_id en tu tabla Materiales
-        precio_por_metro_cuadrado = 120.0  
+        # no he probado que si se busque el material 
+        precio_por_metro_cuadrado = session.exec(select(Material.precio).where(Material.id == item.material_id)).first()
         
         # Cálculo de metros cuadrados esenciales para el taller
         metros_cuadrados = item.ancho_m * item.alto_m

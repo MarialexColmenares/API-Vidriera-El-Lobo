@@ -18,7 +18,7 @@ def crear_orden_trabajo(
     data: OrdenTrabajoCreate ,
     session: Session = Depends(get_db)
 ):
-    return crear_ordenes_trabajo_service(data=data, session=session)
+    return crear_orden_con_detalles(data=data, session=session)
 
 
 

@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel, Field
 
 class PreguntasSegurdadCreate(BaseModel):
@@ -84,23 +86,6 @@ class UsuarioRespuestaSeguridadResponse(BaseModel):
     class Config:
         from_attributes = True  # En Pydantic v2 (antiguo orm_mode = True) para leer objetos de SQLModel/SQLAlchemy
         
-class OrdenTrabajoCreate(BaseModel):
-    descripcion: str
-    fecha_inicio: str
-    fecha_fin: str #esto no deberia ser str sino date 
-    estado: str
-    usuario_id: int
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "descripcion": "Reparación de aire acondicionado",
-                "fecha_inicio": "2024-07-01T10:00:00",
-                "fecha_fin": "2024-07-01T12:00:00",
-                "estado": "pendiente",
-                "usuario_id": 1
-            }
-        }
         
 class MaterialCreate(BaseModel):
     nombre: str 
@@ -133,3 +118,45 @@ class MaterialUpdate(BaseModel):
                 "cantidad_a_sumar": 50.0
             }
         }
+
+
+# orden trabajo
+
+# 1. Esquema para recibir cada vidrio/ítem individual de la orden
+class OrdenDetalleCreate(BaseModel):
+    descripcion: str       # Ej: "Vidrio templado para ventana"
+    material_id: int       # ID del tipo de vidrio en almacén
+    ancho_m: float         # Medidas en metros
+    alto_m: float
+    cantidad: int
+
+# 2. Esquema principal que recibirá el endpoint POST /ordenes
+class OrdenTrabajoCreate(BaseModel):
+    cliente_id: int
+    fecha_entrega_estimado: date
+    detalles: list[OrdenDetalleCreate] # <--- La lista con todos los vidrios de la orden
+
+    class Config:
+        # Esto te genera un ejemplo limpio en el Swagger UI de FastAPI
+        json_schema_extra = {
+            "example": {
+                "cliente_id": 1,
+                "fecha_entrega_estimado": "2026-06-15",
+                "detalles": [
+                    {
+                        "descripcion": "Ventanal principal panorámico",
+                        "material_id": 2,
+                        "ancho_m": 2.10,
+                        "alto_m": 1.50,
+                        "cantidad": 1
+                    },
+                    {
+                        "descripcion": "Puerta de baño esmerilada",
+                        "material_id": 4,
+                        "ancho_m": 0.80,
+                        "alto_m": 1.90,
+                        "cantidad": 2
+                    }
+                    ]
+                }
+            }

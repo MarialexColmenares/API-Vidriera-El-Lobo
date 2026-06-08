@@ -1,28 +1,6 @@
 from datetime import date
+from pydantic import BaseModel, Field, ConfigDict
 
-from pydantic import BaseModel, Field
-
-class PreguntasSegurdadCreate(BaseModel):
-    pregunta: str
-    class Config:
-        from_attributes = True  
-        
-        json_schema_extra = {
-            "example": {
-                "pregunta": "¿Cuál fue el nombre de tu primera mascota?"
-            }
-        }
-        
-class RolCreate(BaseModel):
-    nombre_rol: str
-    descripcion: str
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "nombre_rol": "cliente",
-                "descripcion": "Rol para usuarios clientes"
-            }
-        }
 
 class PermisoCreate(BaseModel):
     nombre: str
@@ -34,6 +12,50 @@ class PermisoCreate(BaseModel):
                 "descripcion": "Permiso para crear ordenes de trabajo"
             }
         }
+class PermisoResponse(BaseModel):
+    id: int
+    nombre: str
+    descripcion: str
+
+    class Config:
+        from_attributes = True
+
+class RolBase(BaseModel):
+    nombre_rol: str
+    descripcion: str
+    
+class RolCreate(BaseModel):
+    nombre_rol: str
+    descripcion: str
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "nombre_rol": "Cliente",
+                "descripcion": "Rol para usuarios clientes"
+            }
+        }
+
+class RolResponse(BaseModel):
+    id: int
+    nombre_rol: str
+    descripcion: str
+    permisos: list[PermisoResponse]  # <-- no ,e gusta que salga la lista vacia cunado no hay roles esto se arrregla en react con el front 
+
+    model_config = ConfigDict(from_attributes=True)
+    
+class PreguntasSegurdadCreate(BaseModel):
+    pregunta: str
+    class Config:
+        from_attributes = True  
+        
+        json_schema_extra = {
+            "example": {
+                "pregunta": "¿Cuál fue el nombre de tu primera mascota?"
+            }
+        }
+        
+
+
 
 class usuarioCreate(BaseModel):
     nombre: str
@@ -46,7 +68,7 @@ class usuarioCreate(BaseModel):
         json_schema_extra = {
             "example": {
                 "nombre": "Crear: ordenes",
-                "apellido": "Permiso para crear ordenes de trabajo",
+                "apellido": "Apellido",
                 "correo": "persona@examplo.com",
                 "password": "contraseña123",
                 "documento": "123456789",

@@ -23,8 +23,4 @@ app = FastAPI(
 def inicio():
     return {"message":"Bienvenidos a la api de Vidrieria el Lobo 🐺"}
 
-@asynccontextmanager
-async def lifespan():
-    create_tables()
-
 app.include_router(router_central)

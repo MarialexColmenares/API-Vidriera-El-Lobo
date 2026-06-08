@@ -1,18 +1,18 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
-from schemas.esquemas import RolCreate
+from schemas.esquemas import RolCreate, RolResponse
 from database.conexion import get_db
 from services.roles_services import *
 
 router = APIRouter(prefix="/roles", tags=["Roles"])
 
-@router.get("/")
+@router.get("/",  response_model= list[RolResponse])
 def obtener_roles(
     session: Session = Depends(get_db)
 ):
     return obtener_roles_services(session)
 
-@router.post("/")
+@router.post("/", status_code=201, response_model=RolResponse)
 def crear_rol(
     data: RolCreate,
     session: Session = Depends(get_db)

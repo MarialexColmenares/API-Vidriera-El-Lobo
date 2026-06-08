@@ -11,9 +11,9 @@ from routers.ordenes_trabajo_router import router as ordenes_trabajo_router
 router_central = APIRouter()
 
 # Incluimos cada sub-router en nuestro router central
-router_central.include_router(usuarios_router)
-router_central.include_router(permisos_router)
-router_central.include_router(preguntas_seguridad_router)
 router_central.include_router(roles_router)
+router_central.include_router(permisos_router)
+router_central.include_router(usuarios_router)
+router_central.include_router(preguntas_seguridad_router)
 router_central.include_router(material_router)
 router_central.include_router(ordenes_trabajo_router)

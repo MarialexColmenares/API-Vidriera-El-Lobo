@@ -1,0 +1,1 @@
+DATABASE_URL = "postgresql+psycopg://postgres:31890@localhost:5432/lobo_db"

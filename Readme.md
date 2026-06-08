@@ -1,5 +1,7 @@
 # 🐺 API - Vidriería El Lobo
 
+Sistema Web para la Trazabilidad y Gestión del módulo de Órdenes en Vidrios, Acero y Aluminios El lobo loaiza
+
 ¡Bienvenido! Esta es la API para la gestión y automatización de órdenes de trabajo de **Vidriería El Lobo**. Este sistema fue desarrollado como un proyecto universitario para optimizar el flujo de trabajo, control de inventario y cálculo de costos de la empresa.
 
 ---

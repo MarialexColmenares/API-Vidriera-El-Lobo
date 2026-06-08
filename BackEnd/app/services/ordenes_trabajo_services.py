@@ -13,13 +13,19 @@ def obtener_ordenes_trabajo_service(session: Session):
     
     return ordenes
 
+
+def generar_codigo_orden_service(session: Session):
+    año_actual = datetime.now().strftime("%y")
+    numero_aleatorio = random.randint(1000, 9999)
+    codigo = f"ORD-{año_actual}-{numero_aleatorio}"
+    
+    return codigo
 #  por ahora funciona y hace un codigo de orden autogenerado pero me gustariaque el numero-aleatorio sino sumativo para que se lleve como un orden en los codigos de orden 
 
 def crear_orden_con_detalles(data: OrdenTrabajoCreate, session: Session):
     # generar código único para la orden (Ej: ORD-26-XXXX) 
-    año_actual = datetime.now().strftime("%y")
-    numero_aleatorio = random.randint(1000, 9999)
-    codigo_autogenerado = f"ORD-{año_actual}-{numero_aleatorio}"
+    
+    codigo_autogenerado = generar_codigo_orden_service(session)
 
     # 1. Instanciamos la cabecera de la orden con los datos generales
     nueva_orden = OrdenTrabajo(
@@ -86,6 +92,17 @@ def estado_orden_service(id_orden, nuevo_estado, session):
     return orden
 
 
-
-
-
+# generar cotizacion 
+def generar_cotizacion_service(id_orden, session):
+    
+    orden = crear_orden_con_detalles(id_orden, session)
+    if not orden:
+        raise HTTPException(status_code=404, detail="Orden no encontrada")
+    
+    orden.estado = "Cotizada"
+    
+    session.add(orden)
+    session.commit()
+    session.refresh(orden)
+    
+    return orden

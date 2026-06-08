@@ -1,19 +1,39 @@
 {
   "permisos": [
     {
-      "nombre": "consulta estadisticas",
-      "descripcion": "permite a los usuarios consultar en dashboard con las estadisticas ",
+      "descripcion": "Modificar los estados de las órdenes de trabajo a medida que avanzan (ej. de Pendiente a En Proceso, Lista o Entregada).",
+      "nombre": "Modificar Estados de Ordenes",
       "id": 1
     },
     {
-      "nombre": "consultar ordenes ",
-      "descripcion": " permite consultar las ordenes de todos los clientes con sus estados y montos",
+      "descripcion": "Abastecer el inventario de la vidriería registrando la entrada de nuevas hojas de vidrio o insumos en el almacén ",
+      "nombre": "Añadir Materiales a Stock",
       "id": 2
     },
     {
-      "nombre": "cancelar ordenes ",
-      "descripcion": "permite a los admin cancelar orenes de clientes",
+      "descripcion": "Gestionar y consultar el historial de los clientes del taller",
+      "nombre": "Gestion y consulta de clientes",
       "id": 3
+    },
+    {
+      "descripcion": "Ver las ordenes y sus materiales aignados",
+      "nombre": "Leer Ordenes de Trabajo",
+      "id": 4
+    },
+    {
+      "descripcion": "Ver Materiales, sus medidadas y cantidades disponibles para las ordenes",
+      "nombre": "Leer Materiales",
+      "id": 5
+    },
+    {
+      "descripcion": "Permiso para cancelar ordenes de trabajo",
+      "nombre": "Cancelar Ordenes de Trabajo",
+      "id": 6
+    },
+    {
+      "descripcion": "permite a los usuarios consultar en dashboard con las estadisticas ",
+      "nombre": "consulta estadisticas",
+      "id": 7
     }
   ]
 }

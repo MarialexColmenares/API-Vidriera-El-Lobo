@@ -21,6 +21,27 @@ def crear_usuario_service(data, session):
     
     return nuevo_usuario
 
+def obtener_usuario_por_id_service(usuario_id, session):
+    usuario = session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    return usuario
+
+def actualizar_usuario_service(usuario_id, data, Session):
+    usuario = Session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    for key, value in data.model_dump(exclude_usent=True).items():
+        setattr(usuario, key, value)
+    
+    Session.add(usuario)
+    Session.commit()
+    Session.refresh(usuario)
+    
+    return usuario
+
 def registrar_preguntas_seguridad_service(usuario_id: int, data_respuestas: list, session):
     respuestas_guardadas = []
 
@@ -70,3 +91,4 @@ def get_usuarios_filtrados_service(
     resultados = session.exec(consulta).all()
     
     return resultados
+

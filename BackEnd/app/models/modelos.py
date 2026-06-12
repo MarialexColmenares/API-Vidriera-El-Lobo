@@ -18,6 +18,7 @@ class Permiso(SQLModel, table=True):
     descripcion: str
     
     roles: List["Rol"] = Relationship(back_populates="permisos", link_model=Rol_Permiso) # relacion a muchos roles a traves de la tabla intermedia Rol_Permiso
+    
 
 class Rol(SQLModel, table=True):
     __tablename__: str = "roles"
@@ -27,7 +28,7 @@ class Rol(SQLModel, table=True):
     descripcion: str
     
     usuarios: List["Usuario"] = Relationship(back_populates="rol") # relacion a muchos usuarios
-    permisos: List[Permiso] = Relationship(back_populates="roles", link_model=Rol_Permiso) # relacion a muchos permisos a traves de la tabla intermedia Rol_Permiso
+    permisos: List["Permiso"] = Relationship(back_populates="roles", link_model=Rol_Permiso) # relacion a muchos permisos a traves de la tabla intermedia Rol_Permiso
 
 
 # los uysuarios necesitaran registrarse un preguntas de seguridad y repuestas

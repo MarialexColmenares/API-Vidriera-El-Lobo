@@ -1,27 +1,32 @@
 from fastapi import HTTPException
-from sqlmodel import Session
 from models.modelos import Abono
 from sqlmodel import select
 
-# aun no se prueban las funciones
-
-def obtener_ordenes_trabajo_service(session: Session):
-    ordenes = session.exec(select(Abono)).all()
+def obtener_abonos_service(session):
+    abonos = session.exec(select(Abono)).all()
     
-    if not ordenes:
-        raise HTTPException(status_code=404, detail="No se Encontraron Abonos Registradas")
+    if not abonos:
+        raise HTTPException(status_code=404, detail="No hay Abonos Registrados")
     
-    return ordenes
+    return abonos
 
-def crear_ordenes_trabajo_service(data, session: Session):
-    nueva_orden = Abono(
-        **data.model_dump()    
+def crear_abono_service(data, session):
+    #  aqui deberia evaluar si la orden ya fue pagada en su totalidad 
+    
+    nuevo_abono = Abono(
+        **data.model_dump()
     )
     
-    session.add(nueva_orden)
+    session.add(nuevo_abono)
     session.commit()
-    session.refresh(nueva_orden)
+    session.refresh(nuevo_abono)
     
-    return nueva_orden
-
-# faltan funciones de filtros y asociar abonos con ordenes 
+    return nuevo_abono
+    
+def obtener_abono_id_service(id_abono, session):
+    abono = session.get(Abono, id_abono)
+    
+    if not abono:
+        raise HTTPException(status_code=404, detail="No existe ese Abono")
+    
+    return abono

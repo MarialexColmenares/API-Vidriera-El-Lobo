@@ -6,10 +6,7 @@ def obtener_roles_services(session):
     roles = session.exec(select(Rol)).all()
     if not roles:
         raise HTTPException (status_code=404,detail="No se encontraron roles")
-    
-    if roles.permisos == []:
-        raise HTTPException (status_code=404,detail="No se encontraron permisos asociados a los roles")
-    
+
     return roles
 
 def obtener_rol_por_id_service(rol_id, session):
@@ -25,13 +22,17 @@ def crear_rol_service(data, session):
         descripcion=data.descripcion,
     )
     
+    rol_existente = session.exec(select(Rol).filter(Rol.nombre_rol == nuevo_rol.nombre_rol)).first()
+    if rol_existente:
+        raise HTTPException(status_code=400, detail="Ya existe un rol con el mismo nombre.")
+    
     session.add(nuevo_rol)
     session.commit()
     session.refresh(nuevo_rol)
     
     return nuevo_rol
 
-def update_rol_service(rol_id, data, session):
+def actualizar_rol_service(rol_id, data, session):
     rol = session.get(Rol, rol_id)
     if not rol:
         raise HTTPException(status_code=404, detail="No se encontró el rol con el ID especificado.")
@@ -68,9 +69,14 @@ def asociar_permiso_a_rol_service(rol_id: int, permiso_id: int, session: Session
     
     return {"message": f"Permiso '{permiso.nombre}' asignado correctamente al rol '{rol.nombre_rol}'."}
 
-def obtener_permisos_de_rol_service(rol_nombre: str, session: Session):
-    rol = session.exec(select(Rol)).filter(Rol.nombre_rol == rol_nombre).first()
+def obtener_permisos_de_rol_service(rol_id: int, session: Session):
+    
+    rol = session.get(Rol, rol_id)
     if not rol:
         raise HTTPException(status_code=404, detail="El rol especificado no existe.")
+    
+    permisos = rol.permisos
+    if not permisos:
+        raise HTTPException(status_code=404, detail="El rol no tiene permisos asignados.")
     
     return {"permisos": rol.permisos}

@@ -1,6 +1,5 @@
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel, Field, ConfigDict
-
 
 class PermisoCreate(BaseModel):
     nombre: str
@@ -20,6 +19,11 @@ class PermisoResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class PermisoUpdate(BaseModel):
+    nombre: str | None = None
+    descripcion: str | None = None
+
+
 class RolBase(BaseModel):
     nombre_rol: str
     descripcion: str
@@ -34,15 +38,27 @@ class RolCreate(BaseModel):
                 "descripcion": "Rol para usuarios clientes"
             }
         }
+        
+class RolUpdate(BaseModel):
+    nombre_rol: str | None = None
+    descripcion: str | None = None
+    class Config:
+            json_schema_extra = {
+                "example": {
+                    "nombre_rol": "Actualiza el nombre del Rol",
+                    "descripcion": "Actualiza la descripcion del Rol"
+                }
+            }
 
 class RolResponse(BaseModel):
     id: int
     nombre_rol: str
     descripcion: str
-    permisos: list[PermisoResponse]  # <-- no ,e gusta que salga la lista vacia cunado no hay roles esto se arrregla en react con el front 
+    permisos: list[PermisoResponse]  # <-- no me gusta que salga la lista vacia cunado no hay roles esto se arrregla en react con el front 
 
     model_config = ConfigDict(from_attributes=True)
     
+
 class PreguntasSegurdadCreate(BaseModel):
     pregunta: str
     class Config:
@@ -53,11 +69,20 @@ class PreguntasSegurdadCreate(BaseModel):
                 "pregunta": "¿Cuál fue el nombre de tu primera mascota?"
             }
         }
+
+
+class PreguntasSegurdadUpdate(BaseModel):
+    pregunta: str | None = None
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "pregunta": "¿Cuál fue el nombre de tu primera mascota actualizado?"
+            }
+        }
         
 
-
-
-class usuarioCreate(BaseModel):
+class UsuarioCreate(BaseModel):
     nombre: str
     apellido: str
     correo: str
@@ -76,7 +101,6 @@ class usuarioCreate(BaseModel):
             }
         }
         
-# nuevo esquema para leer usuarios 
 class UsuarioResponse(BaseModel):
     id: int
     nombre: str
@@ -88,6 +112,14 @@ class UsuarioResponse(BaseModel):
     class Config:
         from_attributes = True  # En Pydantic v2 (antiguo orm_mode = True) para leer objetos de SQLModel/SQLAlchemy
         
+class UsuarioUpdate(BaseModel):
+    nombre: str | None = None
+    apellido: str | None = None
+    correo: str | None = None
+    password: str | None = None
+    documento: str | None = None
+    rol_id: int | None = None
+
 class UsuarioRespuestaSeguridadCreate(BaseModel):
     pregunta_id: int = Field(..., description="El ID de la pregunta predefinida en el catálogo")
     respuesta: str = Field(..., min_length=2, max_length=255, description="La respuesta escrita por el usuario")
@@ -107,7 +139,7 @@ class UsuarioRespuestaSeguridadResponse(BaseModel):
 
     class Config:
         from_attributes = True  # En Pydantic v2 (antiguo orm_mode = True) para leer objetos de SQLModel/SQLAlchemy
-        
+  
         
 class MaterialCreate(BaseModel):
     nombre: str 
@@ -129,7 +161,7 @@ class MaterialCreate(BaseModel):
             }
         }
 
-class MaterialUpdate(BaseModel):
+class MaterialSumar(BaseModel):
     id: int
     cantidad_a_sumar: float
 
@@ -140,7 +172,13 @@ class MaterialUpdate(BaseModel):
                 "cantidad_a_sumar": 50.0
             }
         }
-
+        
+class MaterialUpdate(BaseModel):
+    nombre: str | None = None
+    espesor_mm: float | None = None
+    color: str | None = None
+    stock_disponible: float | None = None
+    precio_m2: float | None = None
 
 # orden trabajo
 
@@ -182,3 +220,20 @@ class OrdenTrabajoCreate(BaseModel):
                     ]
                 }
             }
+
+
+class AbonoCreate(BaseModel):
+    monto: float 
+    fecha_pago: datetime
+    metodo_pago: str
+    observaciones: str | None = None
+    orden_id: int 
+
+#  tambien tengo que hacer uno que devuelva las ordenes con sus abonos  
+class AbonosResponse(BaseModel):
+    id: int
+    monto: float 
+    fecha_pago: datetime
+    metodo_pago: str
+    observaciones: str | None = None
+    orden_id: int 

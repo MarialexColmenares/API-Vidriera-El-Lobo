@@ -12,13 +12,10 @@ def obtener_ordenes_trabajo(
 ):
     return obtener_ordenes_trabajo_service(session)
 
-    
 @router.post("/", status_code=201)
 def crear_orden_trabajo(
     data: OrdenTrabajoCreate ,
     session: Session = Depends(get_db)
 ):
     return crear_orden_con_detalles(data=data, session=session)
-
-
 

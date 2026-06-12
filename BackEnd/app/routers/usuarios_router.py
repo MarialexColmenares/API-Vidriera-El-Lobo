@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session
 from database.conexion import get_db
-from schemas.esquemas import *
+from schemas.esquemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse, UsuarioRespuestaSeguridadCreate, UsuarioRespuestaSeguridadResponse
 from services.usuarios_services import *
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
@@ -15,10 +15,21 @@ def obtener_usuarios(
 
 @router.post("/")
 def crear_usuario(
-    data: usuarioCreate,
+    data: UsuarioCreate,
     session: Session = Depends(get_db)
 ):
     return crear_usuario_service(data=data, session=session)
+
+@router.patch("/{usuario_id}")
+def actualizar_usuario(usuario_id: int, data: UsuarioUpdate, session: Session = Depends(get_db)):
+    return actualizar_usuario_service(usuario_id=usuario_id, data=data, Session=session)
+
+@router.get("/{usuario_id}", response_model=UsuarioResponse)
+def obtener_usuario_por_id(
+    usuario_id: int, 
+    session: Session = Depends(get_db)
+):
+    return obtener_usuario_por_id_service(usuario_id=usuario_id, session=session)
 
 
 @router.post("/{usuario_id}/preguntas-seguridad", response_model=list[UsuarioRespuestaSeguridadResponse])
@@ -52,3 +63,5 @@ def get_usuarios_filter(
         rol_id=rol_id
     )
     return usuarios
+
+# PUEDO AGREGAR UN FILTER A TODAS LAS ENTIDADES ?

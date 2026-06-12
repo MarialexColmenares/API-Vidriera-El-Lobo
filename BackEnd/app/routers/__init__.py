@@ -7,6 +7,7 @@ from routers.preguntas_seguridad_router import router as preguntas_seguridad_rou
 from routers.roles_router import router as roles_router
 from routers.usuarios_router import router as usuarios_router
 from routers.ordenes_trabajo_router import router as ordenes_trabajo_router
+from routers.abonos_router import router as abonos_router
 
 router_central = APIRouter()
 
@@ -17,3 +18,4 @@ router_central.include_router(usuarios_router)
 router_central.include_router(preguntas_seguridad_router)
 router_central.include_router(material_router)
 router_central.include_router(ordenes_trabajo_router)
+router_central.include_router(abonos_router)

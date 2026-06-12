@@ -42,3 +42,20 @@ def sumar_materiales_service(data, session):
     session.refresh(material)
     
     return material
+
+def actualizar_material_service(id_material, data, session):
+    material = session.get(Material, id_material)
+    
+    if not material:
+        raise HTTPException(status_code=404, detail="No existe Ese Material")
+    
+    for key, value in data.model_dump(exclude_unset=True).items():
+        setattr(material, key, value)
+    
+    session.add(material)
+    session.commit()
+    session.refresh(material)
+        
+    return material
+    
+    
